@@ -1,0 +1,4 @@
+streamlit
+camel-ai
+camel-ai[rag]
+unstructured[md]
