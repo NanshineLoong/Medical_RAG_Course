@@ -1,6 +1,6 @@
 # 🏥 CAMEL-AI 医疗智能体 RAG 实战课程
 
-> 💡 **演示文稿**: 可以从这个网址查看演示文稿内容 https://medical-rag-course.lovable.app
+> 💡 **演示文稿**: 可以从这个[网址](https://medical-rag-course.lovable.app)查看。
 
 本项目旨在通过一个医疗场景的演示，帮助初学者理解 **智能体 (Agents)** 与 **检索增强生成 (RAG)** 的核心概念，并动手实现两种不同形态的 RAG 系统。
 
@@ -147,7 +147,7 @@ python -m unittest discover tests
 
 ```bash
 # 1. 克隆项目
-git clone <repository_url>
+git clone https://github.com/NanshineLoong/Medical_RAG_Course.git
 cd medical_rag_course
 
 # 2. 安装 uv
@@ -172,7 +172,7 @@ python -m streamlit run app.py
 
 启动后，在浏览器左侧边栏填写配置：
 
-1. **Base URL**: 你的模型服务地址 (你可以同样前往阿里百炼平台获取)。
+1. **Base URL**: 你的模型服务地址 (你可以前往[阿里百炼平台](https://bailian.console.aliyun.com/)获取)。
 2. **API Key**: 你的 API 密钥。
 3. **Model Name**: 模型名称 (如 `qwen-flash`） 。
 
