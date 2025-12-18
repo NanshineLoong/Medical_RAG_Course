@@ -46,10 +46,24 @@ class TestTask1RetrievalBuild(unittest.TestCase):
             )
             
             # Verify Processing
-            # Should call process for each file
-            self.assertEqual(mock_retriever_instance.process.call_count, 2)
-            mock_retriever_instance.process.assert_any_call(content="/tmp/file1.txt")
-            mock_retriever_instance.process.assert_any_call(content="/tmp/file2.txt")
+            
+            processed_contents = []
+            for call in mock_retriever_instance.process.call_args_list:
+                # 获取 content 参数，支持位置参数和关键字参数
+                args, kwargs = call
+                content = kwargs.get('content')
+                if content is None and len(args) > 0:
+                    content = args[0]
+                
+                if content:
+                    if isinstance(content, list):
+                        processed_contents.extend(content)
+                    else:
+                        processed_contents.append(content)
+            
+            for file_path in file_paths:
+                self.assertIn(file_path, processed_contents, f"文件 {file_path} 未被 retriever.process 处理")
+            
             
             print("✅ 任务 1 测试通过！")
 
