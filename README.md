@@ -161,7 +161,7 @@ uv pip install -r requirements.txt
 ### 2. 运行项目
 
 ```bash
-streamlit run app.py
+python -m streamlit run app.py
 ```
 
 ### 3. 系统配置
