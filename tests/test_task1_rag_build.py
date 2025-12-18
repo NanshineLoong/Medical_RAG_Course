@@ -1,5 +1,5 @@
 import unittest
-from unittest.mock import MagicMock
+from unittest.mock import MagicMock, mock_open, patch
 import sys
 import os
 
@@ -15,21 +15,25 @@ class TestTask1RetrievalBuild(unittest.TestCase):
         # Mocks
         mock_embedding = MagicMock()
         mock_storage = MagicMock()
-        mock_retriever_cls = MagicMock()
         
         # Mock file paths
         file_paths = ["/tmp/file1.txt", "/tmp/file2.txt"]
         
-        # Use patch to intercept VectorRetriever creation inside the function? 
-        # Or passing real objects is fine since they are just objects.
-        # The function creates a VectorRetriever(embedding_model, storage).
-        # We need to mock VectorRetriever class, but it is imported inside rag.py.
-        # We can pass mocks as arguments, but the VectorRetriever class instantiation happens inside.
-        # Actually, looking at the code:
-        # retriever = VectorRetriever(embedding_model=embedding_model, storage=storage)
-        # So we need to patch 'src.core.rag.VectorRetriever'
+        # Mock file contents
+        mock_file_contents = {
+            "/tmp/file1.txt": "这是文件1的内容",
+            "/tmp/file2.txt": "这是文件2的内容"
+        }
         
-        with unittest.mock.patch('src.core.rag.VectorRetriever') as MockRetrieverClass:
+        # Mock open function to simulate file reading
+        def side_effect(file_path, *args, **kwargs):
+            # Return appropriate content based on file path
+            content = mock_file_contents.get(file_path, "")
+            m = mock_open(read_data=content)
+            return m(file_path, *args, **kwargs)
+        
+        with patch('src.core.rag.VectorRetriever') as MockRetrieverClass, \
+             patch('builtins.open', side_effect=side_effect):
             mock_retriever_instance = MockRetrieverClass.return_value
             
             # Run student code
@@ -45,25 +49,22 @@ class TestTask1RetrievalBuild(unittest.TestCase):
                 storage=mock_storage
             )
             
-            # Verify Processing
+            # Verify that process was called for each file
+            # Note: process might be called with file_path or file_content, both are acceptable
+            self.assertEqual(
+                mock_retriever_instance.process.call_count,
+                len(file_paths),
+                f"process 方法应该被调用 {len(file_paths)} 次，但实际调用了 {mock_retriever_instance.process.call_count} 次"
+            )
             
-            processed_contents = []
+            # Verify embed_batch parameter
             for call in mock_retriever_instance.process.call_args_list:
-                # 获取 content 参数，支持位置参数和关键字参数
-                args, kwargs = call
-                content = kwargs.get('content')
-                if content is None and len(args) > 0:
-                    content = args[0]
-                
-                if content:
-                    if isinstance(content, list):
-                        processed_contents.extend(content)
-                    else:
-                        processed_contents.append(content)
-            
-            for file_path in file_paths:
-                self.assertIn(file_path, processed_contents, f"文件 {file_path} 未被 retriever.process 处理")
-            
+                kwargs = call.kwargs
+                self.assertEqual(
+                    kwargs.get('embed_batch'),
+                    10,
+                    "process 方法应该使用 embed_batch=10 参数"
+                )
             
             print("✅ 任务 1 测试通过！")
 
