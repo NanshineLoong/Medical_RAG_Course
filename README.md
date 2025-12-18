@@ -175,10 +175,3 @@ python -m streamlit run app.py
 1. **Base URL**: 你的模型服务地址 (你可以前往[阿里百炼平台](https://bailian.console.aliyun.com/)获取)。
 2. **API Key**: 你的 API 密钥。
 3. **Model Name**: 模型名称 (如 `qwen-flash`） 。
-
----
-
-## 项目信息
-
-**设计**: 复旦大学 DISC 实验室
-**课程**: 人工智能课程，2025 年秋季学期

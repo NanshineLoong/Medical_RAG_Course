@@ -28,8 +28,27 @@ def search_medical_records(query: str, retriever: Any, top_k: int = 3, similarit
         # 可参考：https://docs.camel-ai.org/key_modules/retrievers
         # =======================================================
         
-        print("Warning: search_medical_records not implemented.")
-        return "TODO: 请实现 search_medical_records 函数 (src/core/tools.py)"
+        # print("Warning: search_medical_records not implemented.")
+        # return "TODO: 请实现 search_medical_records 函数 (src/core/tools.py)"
+
+        # 参考思路:
+        results = retriever.query(query, top_k=top_k, similarity_threshold=similarity_threshold)
+        
+        if not results:
+            return "未找到相关记录。"
+        
+        valid_results = []
+        for r in results:
+            text = r.get('text', '')
+            # Filter out generic empty messages if any
+            if "No suitable information retrieved" in text:
+                continue
+            valid_results.append(text)
+        
+        if not valid_results:
+            return "未找到相关记录。"
+            
+        return "\n\n".join(valid_results)
 
         
     except Exception as e:

@@ -6,8 +6,6 @@ from camel.embeddings import OpenAICompatibleEmbedding
 from camel.storages import QdrantStorage
 from camel.retrievers import VectorRetriever
 
-# Helper functions for Student Exercises
-# Students will focus on understanding/implementing logic within these boundaries.
 
 def build_retriever_from_files(
     embedding_model: OpenAICompatibleEmbedding,
@@ -35,9 +33,15 @@ def build_retriever_from_files(
     # 可参考：https://docs.camel-ai.org/key_modules/retrievers
     # =======================================================
     
-    print("Warning: build_retriever_from_files not implemented.")
-    return None
+    # 在实现前返回 None，避免程序崩溃
+    # print("Warning: build_retriever_from_files not implemented.")
+    # return None
 
+    # 参考代码 (学生需自己实现):
+    retriever = VectorRetriever(embedding_model=embedding_model, storage=storage)
+    for file_path in file_paths:
+        retriever.process(content=file_path, embed_batch=10)
+    return retriever
 
 def get_retrieval_results(
     retriever: VectorRetriever, 
@@ -65,8 +69,11 @@ def get_retrieval_results(
     # 任务：调用 retriever 的 query 方法获取结果
     # =======================================================
     
-    print("Warning: get_retrieval_results not implemented.")
-    return []
+    # print("Warning: get_retrieval_results not implemented.")
+    # return []
+
+    # 参考代码 (学生需自己实现):
+    return retriever.query(query=query, top_k=top_k, similarity_threshold=threshold)
 
 
 def format_retrieval_results(results: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
